@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Mail;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
+
+class ForgetPassword extends Mailable
+{
+    protected $data = [];
+
+    use Queueable, SerializesModels;
+
+    /**
+     * Create a new message instance.
+     *
+     * @return void
+     */
+    public function __construct($data)
+    {
+        $this->data = $data;
+    }
+
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
+    public function build()
+    {
+        return $this
+            ->from('ahmedattaf11111@gmail.com', 'مجتمع الامتحانات')
+            ->view('forget-password')
+            ->subject('تغير كلمة المرور')
+            ->with('data', $this->data);
+    }
+}
