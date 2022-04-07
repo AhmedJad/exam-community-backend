@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Http\Controllers\ExamAdminController;
+use App\Models\Exam;
 
 /* |-------------------------------------------------------------------------- | API Routes |-------------------------------------------------------------------------- | | Here is where you can register API routes for your application. These | routes are loaded by the RouteServiceProvider within a group which | is assigned the "api" middleware group. Enjoy building your API! | */
 
@@ -19,4 +20,12 @@ Route::controller(AuthController::class)->prefix("auth")->group(function () {
     Route::post('edit-image', "editImage");
     Route::delete('delete-image', "deleteImage");
     Route::get('current-user', "getCurrentUser");
+});
+Route::controller(ExamAdminController::class)->prefix("exams")->group(function () {
+    Route::get("/", "getExams");
+    Route::get("{parentId}", "getChildren");
+    Route::post("create", "create");
+    Route::put("rename", "rename");
+    Route::put("/", "editExam");
+    Route::delete("delete/{id}", "delete");
 });

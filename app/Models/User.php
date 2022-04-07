@@ -42,10 +42,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, CanRe
     {
         $this->attributes["password"] = Hash::make($value);
     }
-    public function getImageAttribute()
-    {
-        return $this->attributes["image"] ? url("images/" . $this->attributes["image"]) : null;
-    }
     /**
      * The attributes that should be cast.
      *

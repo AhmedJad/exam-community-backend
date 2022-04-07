@@ -111,7 +111,8 @@ class AuthController extends Controller
     }
     public function getCurrentUser()
     {
-        return request()->user();
+        $user = request()->user();
+        return ["image" => $user->image ? url("images/$user->image") : null];
     }
     //Commons
     protected function respondWithToken($token)
