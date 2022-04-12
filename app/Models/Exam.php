@@ -22,4 +22,8 @@ class Exam extends Model
     {
         return $value ? Carbon::parse($value)->format('Y-m-d\TH:i') : null;
     }
+    public function examSolutions()
+    {
+        return $this->hasOne(ExamSolution::class);
+    }
 }

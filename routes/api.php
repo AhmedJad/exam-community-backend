@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExamAdminController;
-use App\Models\Exam;
+use App\Http\Controllers\ExamSolutionController;
 
 /* |-------------------------------------------------------------------------- | API Routes |-------------------------------------------------------------------------- | | Here is where you can register API routes for your application. These | routes are loaded by the RouteServiceProvider within a group which | is assigned the "api" middleware group. Enjoy building your API! | */
 
@@ -28,4 +28,10 @@ Route::controller(ExamAdminController::class)->prefix("exams")->group(function (
     Route::put("rename", "rename");
     Route::put("/", "editExam");
     Route::delete("delete/{id}", "delete");
+});
+Route::controller(ExamSolutionController::class)->prefix("exams-solutions")->group(function () {
+    Route::get("users", "getUsers");
+    Route::get("user-exams/{userId}", "getExams");
+    Route::get("exam-children/{parentId}", "getChildren");
+    Route::post("", "solve");
 });
