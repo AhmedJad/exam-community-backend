@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/', function () {
+    return redirect("auth/login");
+});
 Route::get('/{any?}', function () {
     return View('welcome');
 })->where("any",".*");

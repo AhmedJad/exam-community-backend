@@ -39,7 +39,7 @@
     <app-root></app-root>
     <script src="{{url('runtime.049f1d068306b7345729.js')}}" defer></script>
     <script src="{{url('polyfills.dd9580eb0bfdf99e34b1.js')}}" defer></script>
-    <script src="{{url('main.a233158c840876f1e269.js')}}" defer></script>
+    <script src="{{url('main.9ab8bd2b0a45839b07c8.js')}}" defer></script>
 
 </body>
 
