@@ -12,16 +12,10 @@ class Exam extends Model
     protected $guarded = [];
     protected $casts = [
         "questions" => "json",
+        'start_date' => 'datetime:Y-m-d\TH:i',
+        'end_date' => 'datetime:Y-m-d\TH:i'
     ];
     public $timestamps = false;
-    public function getStartDateAttribute($value)
-    {
-        return $value ? Carbon::parse($value)->format('Y-m-d\TH:i') : null;
-    }
-    public function getEndDateAttribute($value)
-    {
-        return $value ? Carbon::parse($value)->format('Y-m-d\TH:i') : null;
-    }
     public function examSolutions()
     {
         return $this->hasOne(ExamSolution::class);

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Exam;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/', function () {
-    return redirect("auth/login");
+    return redirect("home");
 });
 Route::get('/{any?}', function () {
     return View('welcome');

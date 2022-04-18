@@ -27,57 +27,38 @@ class ExamSolutionController extends Controller
     }
     function getExams($userId)
     {
-        return $this->makeFirstSelectionSelected($this->examSolutionRepository->getExams(
+        return $this->markFirstSelectionSelected($this->examSolutionRepository->getExams(
             $userId,
             JWTAuth::parseToken()->getPayload()->get("sub")
         ));
     }
     function getChildren($parentId)
     {
-        return $this->makeFirstSelectionSelected($this->examSolutionRepository->getChildren(
+        return $this->markFirstSelectionSelected($this->examSolutionRepository->getChildren(
             $parentId,
             JWTAuth::parseToken()->getPayload()->get("sub")
         ));
     }
     function solve(Request $request)
     {
-        $correctAnswerCounter = 0;
         $exam = $this->examSolutionRepository->getExam(
             $request->exam_id,
             JWTAuth::parseToken()->getPayload()->get("sub")
         );
-        $examQuestions = $exam->questions;
-        $solutions = [];
         if ($this->examUnavailable($exam)) return response()->json(["error" => "Exam unavailable"], 400);
-        foreach ($request->solutions as $solutionIndex => $solution) {
-            $correctSelectionIndex = 0;
-            $correctAnswer = $examQuestions[$solution["questionIndex"]]["selections"][$solution["selectedSelectionIndex"]]["selected"];
-            if ($correctAnswer) {
-                $correctAnswerCounter++;
-                $correctSelectionIndex = $solution["selectedSelectionIndex"];
-            } else {
-                $correctSelectionIndex = $this->getCorrectSelection($examQuestions, $solution["questionIndex"]);
-            }
-            $solutions[] = [
-                "questionIndex" => $solution["questionIndex"],
-                "selectedSelectionIndex" => $solution["selectedSelectionIndex"],
-                "correctSelectionIndex" => $correctSelectionIndex
-            ];
-        }
+        $solutionsStates = $this->getSolutionsStates($exam->questions, $request->solutions);
         $request->merge([
             "user_id" => JWTAuth::parseToken()->getPayload()->get("sub"),
-            "result" => $correctAnswerCounter . "/" . count($examQuestions),
-            "solutions" => $solutions
+            "result" => $solutionsStates["result"],
+            "solutions" => $solutionsStates["solutions"]
         ]);
         if (!$exam->exercise) $this->examSolutionRepository->saveSolutions($request->input());
-        return [
-            "solutions" => $solutions,
-            "result" => $correctAnswerCounter . "/" . count($examQuestions)
-        ];
+        return $solutionsStates;
     }
     //Commons
+
     //This function to hide the selected selections
-    private function makeFirstSelectionSelected($exams)
+    private function markFirstSelectionSelected($exams)
     {
         $newExams = [];
         foreach ($exams as $exam) {
@@ -98,6 +79,30 @@ class ExamSolutionController extends Controller
         }
         return $newExams;
     }
+    private function getSolutionsStates($examQuestions, $requestSolutions)
+    {
+        $solutions = [];
+        $correctAnswerCounter = 0;
+        foreach ($requestSolutions as $solutionIndex => $solution) {
+            $correctSelectionIndex = 0;
+            $correctAnswer = $examQuestions[$solution["questionIndex"]]["selections"][$solution["selectedSelectionIndex"]]["selected"];
+            if ($correctAnswer) {
+                $correctAnswerCounter++;
+                $correctSelectionIndex = $solution["selectedSelectionIndex"];
+            } else {
+                $correctSelectionIndex = $this->getCorrectSelection($examQuestions, $solution["questionIndex"]);
+            }
+            $solutions[] = [
+                "questionIndex" => $solution["questionIndex"],
+                "selectedSelectionIndex" => $solution["selectedSelectionIndex"],
+                "correctSelectionIndex" => $correctSelectionIndex
+            ];
+        }
+        return [
+            "result" => $correctAnswerCounter . "/" . count($examQuestions),
+            "solutions" => $solutions
+        ];
+    }
     private function getCorrectSelection($examQuestions, $questionIndex)
     {
         foreach ($examQuestions[$questionIndex]["selections"]
@@ -107,8 +112,10 @@ class ExamSolutionController extends Controller
     }
     private function examUnavailable($exam)
     {
-        return $exam->examSolutions || (($exam->start_date ? Carbon::now()->isBefore($exam->start_date) : false)
+        return $exam->examSolutions || (
+            ($exam->start_date ? Carbon::now()->addHours(2)->lt($exam->start_date) : false)
             ||
-            ($exam->end_date ? Carbon::now()->isAfter($exam->end_date) : false));
+            ($exam->end_date ? Carbon::now()->addHours(2)->gt($exam->end_date) : false)
+        );
     }
 }
