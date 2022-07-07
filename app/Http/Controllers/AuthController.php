@@ -77,8 +77,8 @@ class AuthController extends Controller
     public function forgetPassword(User $user)
     {
         $token = Str::random(40);
-        $this->authRepository->insertResetPassword($user->email, $token);
-        Mail::to($user->email)->send(new ForgetPassword(['user' => $user, 'token' => $token]));
+        // $this->authRepository->insertResetPassword($user->email, $token);
+        Mail::to($user->email)->send(new ForgetPassword(['user' => $user, 'token' => "Dsdsdsdsd"]));
     }
     public function resetPassword(ResetPassword $request)
     {

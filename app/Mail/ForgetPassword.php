@@ -31,7 +31,7 @@ class ForgetPassword extends Mailable
     public function build()
     {
         return $this
-            ->from('ahmedattaf11111@gmail.com', 'مجتمع الامتحانات')
+            ->from('elzatouna@elzatouna.com', 'مجتمع الامتحانات')
             ->view('forget-password')
             ->subject('تغير كلمة المرور')
             ->with('data', $this->data);
