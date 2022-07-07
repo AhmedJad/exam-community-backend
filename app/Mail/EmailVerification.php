@@ -27,7 +27,7 @@ class EmailVerification extends Mailable
      */
     public function build()
     {
-        return $this->from('ahmedattaf11111@gmail.com', 'مجتمع الامتحانات')
+        return $this->from('elzatouna@elzatouna.com', 'مجتمع الامتحانات')
             ->subject("تفعيل البريد الالكتروني")
             ->view('email-verification', ["verificationCode" => $this->verificationCode]);
 

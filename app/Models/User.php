@@ -60,6 +60,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, CanRe
             "first_name" => $this->attributes["first_name"],
             "last_name" => $this->attributes["last_name"],
             "email" => $this->attributes["email"],
+            "email_verified_at" => $this->attributes["email_verified_at"],
         ];
     }
 }
