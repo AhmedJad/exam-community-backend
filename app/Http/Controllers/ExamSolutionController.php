@@ -21,7 +21,7 @@ class ExamSolutionController extends Controller
         $userId = JWTAuth::parseToken()->getPayload()->get("sub");
         $users = $this->examSolutionRepository->getUsersExcept($userId);
         foreach ($users as $user) {
-            $user->image = $user->image ? url("images/$user->image") : null;
+            $user->image = $user->image ? "https://examcommunity.herokuapp.com/images/$user->image" : null;
         }
         return $users;
     }

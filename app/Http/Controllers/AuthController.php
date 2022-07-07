@@ -77,8 +77,8 @@ class AuthController extends Controller
     public function forgetPassword(User $user)
     {
         $token = Str::random(40);
-        // $this->authRepository->insertResetPassword($user->email, $token);
-        Mail::to($user->email)->send(new ForgetPassword(['user' => $user, 'token' => "Dsdsdsdsd"]));
+        $this->authRepository->insertResetPassword($user->email, $token);
+        Mail::to($user->email)->send(new ForgetPassword(['user' => $user, 'token' => $token]));
     }
     public function resetPassword(ResetPassword $request)
     {
@@ -101,7 +101,7 @@ class AuthController extends Controller
         $image = $request->file("image")->store("");
         $oldImage = $this->authRepository->editImage($authUserId, $image);
         Storage::delete($oldImage);
-        return ["image" => url("images/$image")];
+        return ["image" => "https://examcommunity.herokuapp.com/images/$image"];
     }
     public function deleteImage()
     {
@@ -112,7 +112,7 @@ class AuthController extends Controller
     public function getCurrentUser()
     {
         $user = request()->user();
-        return ["image" => $user->image ? url("images/$user->image") : null];
+        return ["image" => $user->image ? "https://examcommunity.herokuapp.com//images/$user->image" : null];
     }
     //Commons
     protected function respondWithToken($token)
