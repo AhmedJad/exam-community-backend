@@ -13,7 +13,6 @@ class ExamAdminController extends Controller
     public function __construct(ExamAdminRepository $examAdminRepository)
     {
         $this->middleware("auth");
-        $this->middleware("verified");
         $this->examAdminRepository = $examAdminRepository;
     }
     public function getExams()

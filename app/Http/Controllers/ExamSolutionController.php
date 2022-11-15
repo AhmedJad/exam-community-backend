@@ -13,7 +13,6 @@ class ExamSolutionController extends Controller
     function __construct(ExamSolutionRepository $examSolutionRepository)
     {
         $this->middleware("auth");
-        $this->middleware("verified");
         $this->examSolutionRepository = $examSolutionRepository;
     }
     function getUsers()
